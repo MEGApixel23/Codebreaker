@@ -9,7 +9,9 @@ module Codebreaker
     end
 
     def start
-      @code = '1234'
+      4.times do
+        @code << rand(1...6).to_s
+      end
     end
   end
 end

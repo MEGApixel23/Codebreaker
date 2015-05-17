@@ -14,10 +14,20 @@ module Codebreaker
         game.start
         expect(game.code.length).to be(4)
       end
+
       it 'saves secret code with numbers from 1 to 6' do
         game = Game.new
         game.start
         expect(game.code).to match(/^[1-6]+$/)
+      end
+
+      it 'generates random codes' do
+        game1 = Game.new
+        game1.start
+        game2 = Game.new
+        game2.start
+
+        expect(game1.code).not_to eq(game2.code)
       end
     end
   end
