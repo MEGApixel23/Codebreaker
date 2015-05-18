@@ -43,5 +43,40 @@ module Codebreaker
         expect{game.input_code = 'test data'}.to raise_exception
       end
     end
+
+    describe '#check_code' do
+      it 'checks code without input it' do
+        expect{game.check_code}.to raise_exception
+      end
+
+      it 'marks code according to algorithm' do
+        game.instance_variable_set :@code, '1234'
+        game.input_code = '1235'
+        expect(game.check_code).to eq('+++')
+
+        game.instance_variable_set :@code, '1234'
+        game.input_code = '5551'
+        expect(game.check_code).to eq('-')
+
+        game.instance_variable_set :@code, '1234'
+        game.input_code = '1243'
+        expect(game.check_code).to eq('++--')
+      end
+
+      it 'check how much tries can user take' do
+        game.input_code = '5551'
+
+        (0..Game::MAX_TRIES).each do |try|
+          if try === Game::MAX_TRIES
+            expect{game.check_code}.to raise_exception
+          else
+            game.check_code
+          end
+        end
+      end
+
+      it 'checks win'
+      it 'checks loose'
+    end
   end
 end
