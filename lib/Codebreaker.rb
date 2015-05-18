@@ -17,15 +17,10 @@ module Codebreaker
     end
 
     def input_code=(input)
-      unless input.kind_of?(Numeric) || input.kind_of?(String)
-        raise Exception
-      end
-
-      unless input =~ /^[1-6]{4}$/
-        raise Exception
-      end
-
-      @input_code = input.to_s
+      raise Exception unless input.kind_of?(Numeric) || input.kind_of?(String)
+      input = input.to_s
+      raise Exception unless input =~ /^[1-6]{4}$/
+      @input_code = input
     end
 
     def check_code

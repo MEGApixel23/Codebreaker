@@ -31,7 +31,7 @@ module Codebreaker
 
     describe '#input_code' do
       it 'take a guess and inputs code' do
-        game.input_code = '1234'
+        game.input_code = 1234
 
         expect(game.input_code).not_to be_empty
       end
@@ -41,6 +41,7 @@ module Codebreaker
         expect{game.input_code = []}.to raise_exception
         expect{game.input_code = ''}.to raise_exception
         expect{game.input_code = 'test data'}.to raise_exception
+        expect{game.input_code = '123x'}.to raise_exception
       end
     end
 
