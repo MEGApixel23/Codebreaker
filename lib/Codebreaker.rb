@@ -1,4 +1,5 @@
 require "Codebreaker/version"
+require 'json'
 
 module Codebreaker
   class Game
@@ -8,6 +9,9 @@ module Codebreaker
 
     def initialize
       @code, @max_tries, @current_try = '', Game::MAX_TRIES, 0
+      @game_result = nil
+      @user_name = ''
+      @scores_file = File.expand_path('../scores.json', __FILE__)
     end
 
     def start
@@ -25,7 +29,8 @@ module Codebreaker
 
     def check_code
       raise Exception 'You must to input code first' if @input_code.empty?
-      raise Exception 'Max tries' if @current_try >= @max_tries
+      return loose if @current_try >= @max_tries
+      return win if @input_code == @code
 
       @current_try += 1
 
@@ -54,6 +59,29 @@ module Codebreaker
       end
 
       result
+    end
+
+    private
+    def win
+      @game_result = true
+    end
+
+    def loose
+      @game_result = false
+    end
+
+    public
+    def save_result(name)
+      raise Exception 'To save result user must win!' if @game_result != true
+      @user_name = name
+
+      results = File.read(@scores_file)
+      results = JSON.load results
+
+      results = [] unless results.is_a? Array
+
+      results << {name: name, tries: @current_try}
+      File.write(@scores_file, results.to_json)
     end
   end
 end

@@ -64,20 +64,75 @@ module Codebreaker
         expect(game.check_code).to eq('++--')
       end
 
-      it 'check how much tries can user take' do
-        game.input_code = '5551'
-
-        (0..Game::MAX_TRIES).each do |try|
-          if try === Game::MAX_TRIES
-            expect{game.check_code}.to raise_exception
-          else
-            game.check_code
-          end
-        end
+      it 'checks win' do
+        game.instance_variable_set :@code, '1234'
+        game.input_code = '1234'
+        expect(game).to receive(:win)
+        game.check_code
       end
 
-      it 'checks win'
-      it 'checks loose'
+      it 'checks loose' do
+        game.instance_variable_set :@code, '1234'
+        game.input_code = '4321'
+        expect(game).to receive(:loose)
+
+        (0..Game::MAX_TRIES).each do
+          game.check_code
+        end
+      end
+    end
+
+    describe '#win' do
+      it 'sets game_result into win statement' do
+        game.send(:win)
+        expect(game.instance_variable_get(:@game_result)).to eq(true)
+      end
+    end
+
+    describe '#loose' do
+      it 'sets game_result into loose statement' do
+        game.send(:loose)
+        expect(game.instance_variable_get(:@game_result)).to eq(false)
+      end
+    end
+
+    describe '#save_result' do
+      it 'not works if codebreaker has not won' do
+        expect{
+          game.save_result 'Ivan Ivanov'
+        }.to raise_exception
+
+        game.send(:loose)
+        expect{
+          game.save_result 'Ivan Ivanov'
+        }.to raise_exception
+      end
+
+      it 'saves user`s name if codebreaker has won' do
+        game.send(:win)
+        game.save_result 'Ivan Ivanov'
+
+        expect(game.instance_variable_get(:@user_name)).to eq('Ivan Ivanov')
+      end
+
+      it 'saves scores and user`s name into file' do
+        tested_name = 'Ivan Ivanov ' + Time.now.to_i.to_s
+        current_try = 12
+
+        game.instance_variable_set(:@current_try, current_try)
+        game.send(:win)
+        game.save_result tested_name
+
+        results = File.read(game.instance_variable_get(:@scores_file))
+        results = JSON.load results
+
+        has_saved = false
+        results.each do |res|
+          has_saved = true if res['name'] == tested_name && res['tries'] == current_try
+        end
+
+        expect(has_saved).to be(true)
+      end
     end
   end
 end
