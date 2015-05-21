@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'fileutils'
 
 module Codebreaker
   describe Game do
@@ -97,6 +98,19 @@ module Codebreaker
     end
 
     describe '#save_result' do
+      tmp_scores_file = File.expand_path('../tmp/scores.json', __FILE__)
+
+      before(:all) do
+        game = Game.new
+        FileUtils.copy game.instance_variable_get(:@scores_file), tmp_scores_file
+      end
+
+      after(:all) do
+        game = Game.new
+        FileUtils.copy tmp_scores_file, game.instance_variable_get(:@scores_file)
+        FileUtils.rm(tmp_scores_file)
+      end
+
       it 'not works if codebreaker has not won' do
         expect{
           game.save_result 'Ivan Ivanov'
@@ -133,6 +147,11 @@ module Codebreaker
 
         expect(has_saved).to be(true)
       end
+    end
+
+    describe '#hint' do
+      it 'gives a number from code in right position'
+      it 'can gives hint only once'
     end
   end
 end

@@ -83,5 +83,20 @@ module Codebreaker
       results << {name: name, tries: @current_try}
       File.write(@scores_file, results.to_json)
     end
+
+    def hint
+      needed_index = rand(0...3)
+      hint = ''
+
+      @code.chars.each_with_index do |char, index|
+        if index == needed_index
+          hint << char
+        else
+          hint << '*'
+        end
+      end
+
+      hint
+    end
   end
 end
