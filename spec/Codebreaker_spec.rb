@@ -150,8 +150,19 @@ module Codebreaker
     end
 
     describe '#hint' do
-      it 'gives a number from code in right position'
-      it 'can gives hint only once'
+      it 'gives a number from code in right position' do
+        game.hint.chars.each_with_index do |char, index|
+          if char != '*'
+            expect(game.instance_variable_get(:@code).chars[index]).to eq(char)
+          end
+        end
+      end
+
+      it 'can gives hint only once' do
+        game.hint
+
+        expect{game.hint}.to raise_exception
+      end
     end
   end
 end

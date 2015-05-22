@@ -12,6 +12,8 @@ module Codebreaker
       @game_result = nil
       @user_name = ''
       @scores_file = File.expand_path('../scores.json', __FILE__)
+      @hint_allowed = true
+      @hints = 0
     end
 
     def start
@@ -85,6 +87,8 @@ module Codebreaker
     end
 
     def hint
+      raise Exception unless @hint_allowed
+
       needed_index = rand(0...3)
       hint = ''
 
@@ -96,6 +100,8 @@ module Codebreaker
         end
       end
 
+      @hint_allowed = false
+      @hints += 1
       hint
     end
   end
