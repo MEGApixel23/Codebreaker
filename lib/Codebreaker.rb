@@ -1,9 +1,9 @@
-require "Codebreaker/version"
+require_relative "Codebreaker/version"
 require 'json'
 
 module Codebreaker
   class Game
-    attr_reader :code, :input_code, :max_tries, :current_try
+    attr_reader :code, :input_code, :max_tries, :current_try, :game_result
 
     MAX_TRIES = 5
 
@@ -25,12 +25,12 @@ module Codebreaker
     def input_code=(input)
       raise Exception unless input.kind_of?(Numeric) || input.kind_of?(String)
       input = input.to_s
-      raise Exception unless input =~ /^[1-6]{4}$/
+      raise 'Code must contain 4 numbers from 1 to 6' unless input =~ /^[1-6]{4}$/
       @input_code = input
     end
 
     def check_code
-      raise Exception 'You must to input code first' if @input_code.empty?
+      raise Exception 'You must input code first' if @input_code.empty?
       return loose if @current_try >= @max_tries
       return win if @input_code == @code
 
