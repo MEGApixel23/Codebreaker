@@ -74,7 +74,7 @@ module Codebreaker
 
     public
     def save_result(name)
-      raise Exception 'To save result user must win!' if @game_result != true
+      raise Exception, 'To save result user must win!' if @game_result != true
       @user_name = name
 
       results = File.read(@scores_file)
