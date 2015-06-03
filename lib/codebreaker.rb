@@ -5,7 +5,7 @@ module Codebreaker
   class Game
     attr_reader :code, :input_code, :max_tries, :current_try, :game_result
 
-    MAX_TRIES = 5
+    MAX_TRIES = 8
 
     def initialize
       @code, @max_tries, @current_try = '', Game::MAX_TRIES, 0
@@ -84,6 +84,8 @@ module Codebreaker
 
       results << {name: name, tries: @current_try}
       File.write(@scores_file, results.to_json)
+
+      results
     end
 
     def hint
