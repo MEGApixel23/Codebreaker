@@ -77,7 +77,7 @@ module Codebreaker
         game.input_code = '4321'
         expect(game).to receive(:loose)
 
-        (0..Game::MAX_TRIES).each do
+        (0...Game::MAX_TRIES).each do
           game.check_code
         end
       end

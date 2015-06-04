@@ -30,11 +30,11 @@ module Codebreaker
     end
 
     def check_code
+      @current_try += 1
+
       raise Exception 'You must input code first' if @input_code.empty?
       return loose if @current_try >= @max_tries
       return win if @input_code == @code
-
-      @current_try += 1
 
       result = ''
       code_copy = @code.clone
