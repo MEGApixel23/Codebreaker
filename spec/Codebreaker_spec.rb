@@ -164,5 +164,40 @@ module Codebreaker
         expect{game.hint}.to raise_exception
       end
     end
+
+    describe '#get_results' do
+      tmp_scores_file = File.expand_path('../tmp/scores.json', __FILE__)
+
+      before(:all) do
+        game = Game.new
+        FileUtils.copy game.instance_variable_get(:@scores_file), tmp_scores_file
+      end
+
+      after(:all) do
+        game = Game.new
+        FileUtils.copy tmp_scores_file, game.instance_variable_get(:@scores_file)
+        FileUtils.rm(tmp_scores_file)
+      end
+
+      it 'gives result table' do
+        expect(game).to respond_to :get_results
+      end
+
+      it 'gives results in string format' do
+        expect(game.get_results :raw).to be_a_kind_of String
+      end
+
+      xit 'gives results in object format' do
+        #@TODO check if score table is empty
+        results = game.get_results :object
+        expect(results).to be_a_kind_of Array
+
+        results.each do |item|
+          expect(item).to be_a_kind_of Object
+          expect(item).to have_key 'name'
+          expect(item).to have_key 'tries'
+        end
+      end
+    end
   end
 end

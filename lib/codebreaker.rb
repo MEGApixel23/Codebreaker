@@ -4,13 +4,15 @@ require 'json'
 module Codebreaker
   class Game
     attr_reader :code, :input_code, :max_tries, :current_try, :game_result
+    attr_accessor :scores_file
 
     MAX_TRIES = 8
 
     def initialize
-      @code, @max_tries, @current_try = '', Game::MAX_TRIES, 0
+      @code = @user_name = ''
+      @max_tries = Game::MAX_TRIES
+      @current_try = 0
       @game_result = nil
-      @user_name = ''
       @scores_file = File.expand_path('../scores.json', __FILE__)
       @hint_allowed = true
       @hints = 0
@@ -43,8 +45,7 @@ module Codebreaker
       @input_code.chars.each_with_index do |char, index|
         if char === @code[index]
           result << '+'
-          code_copy[index] = '*'
-          input_code_copy[index] = '*'
+          code_copy[index] = input_code_copy[index] = '*'
         end
       end
 
@@ -54,8 +55,7 @@ module Codebreaker
 
           if index_of_char_in_code
             result << '-'
-            code_copy[index_of_char_in_code] = '*'
-            input_code_copy[index] = '*'
+            code_copy[index_of_char_in_code] = input_code_copy[index] = '*'
           end
         end
       end
@@ -77,8 +77,7 @@ module Codebreaker
       raise Exception, 'To save result user must win!' if @game_result != true
       @user_name = name
 
-      results = File.read(@scores_file)
-      results = JSON.load results
+      results = get_results :object
 
       results = [] unless results.is_a? Array
 
@@ -105,6 +104,15 @@ module Codebreaker
       @hint_allowed = false
       @hints += 1
       hint
+    end
+
+    def get_results(format = :object)
+      file = File.read @scores_file
+
+      raise Exception, 'Unknown format' unless [:object, :raw].include? format
+
+      return JSON.load(file) if format === :object
+      return file if format === :raw
     end
   end
 end
