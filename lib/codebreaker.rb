@@ -1,4 +1,4 @@
-require_relative 'Codebreaker/version'
+require_relative 'codebreaker/version'
 require 'json'
 
 module Codebreaker
