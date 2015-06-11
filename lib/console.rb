@@ -3,7 +3,7 @@ require_relative 'codebreaker'
 while true do
   game = Codebreaker::Game.new()
   game.start
-  #puts game.code
+  puts game.code
   puts 'Game starts. Input 4 numbers from 1 to 6'
 
   i = 0

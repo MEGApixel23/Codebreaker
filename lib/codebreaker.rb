@@ -78,10 +78,10 @@ module Codebreaker
       @user_name = name
 
       results = get_results :object
-
       results = [] unless results.is_a? Array
-
       results << {name: name, tries: @current_try}
+      results.sort! { |a, b| a['tries'] <=> b['tries']}
+
       File.write(@scores_file, results.to_json)
 
       results

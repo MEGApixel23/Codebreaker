@@ -147,6 +147,8 @@ module Codebreaker
 
         expect(has_saved).to be(true)
       end
+
+      it 'saves scores by tries sort'
     end
 
     describe '#hint' do
